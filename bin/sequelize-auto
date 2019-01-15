@@ -7,7 +7,6 @@ var _ = Sequelize.Utils._;
 
 var argv = require('yargs')
   .usage('Usage: sequelize-auto -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName]')
-  .demand(['h', 'd'])
   .alias('h', 'host')
   .alias('d', 'database')
   .alias('u', 'user')
@@ -75,6 +74,9 @@ configFile.camelCase = !!argv.C;
 configFile.schema = argv.s || configFile.schema;
 configFile.typescript = argv.z || configFile.typescript || false;
 configFile.camelCaseForFileName = argv.f || configFile.camelCaseForFileName || false;
+configFile.username = argv.u || configFile.username;
+configFile.database = argv.d || configFile.database || configFile.dialect;
+configFile.password = argv.x || configFile.password || null;
 
 function getDefaultPort(dialect) {
     switch (dialect.toLowerCase()) {
@@ -86,8 +88,8 @@ function getDefaultPort(dialect) {
         return 3306;
     }
 }
-
-var auto = new sequelizeAuto(argv.d, argv.u, (!! argv.x ? ('' + argv.x) : null), configFile);
+console.log(configFile);
+var auto = new sequelizeAuto(configFile.database, configFile.username, configFile.password, configFile);
 
 auto.run(function (err) {
   if (err) throw err;
