@@ -88,7 +88,6 @@ function getDefaultPort(dialect) {
         return 3306;
     }
 }
-console.log(configFile);
 var auto = new sequelizeAuto(configFile.database, configFile.username, configFile.password, configFile);
 
 auto.run(function (err) {
